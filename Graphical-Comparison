@@ -1,0 +1,7 @@
+plt.plot(fvalue_SubG_const,label='subgradient')
+plt.plot(fvalue_PG_const,label='PG const step')
+plt.plot(fvalue_APG_const,label='APG const step')
+plt.plot(fvalue_APG_LS,label='APG line search')
+plt.plot(fvalue_CD,label='CD')
+plt.axis([0,100,10000,fvalue_CD[0]])
+plt.legend()
