@@ -1,0 +1,23 @@
+import matplotlib.pyplot as plt
+
+
+# Define parameters. Size of A is n x p
+p = 1000
+n = 500
+kMax = 2000   # Number of iteration
+beta = 0.75 # decreasing factor for line search
+# Generate the sparse vector xStar
+# and Randomly set 20 elements
+xStar = np.zeros((p,1))
+xStar[np.floor(p*np.random.rand(20,1)).astype(np.int)]=1
+xStar = xStar*np.random.normal(0,10,(p,1))
+
+# Generate A and y. y = Ax + error
+A = np.random.randn(n,p)
+y = A.dot(xStar) + np.random.randn(n,1)
+# This lamda is too large and making the x vector zero every time
+lamda = np.sqrt(2*n*np.log(p)).tolist()
+#lamda = 1.
+
+# Proximal Gradient Descent
+#xk = np.random.rand(p,1) # Initialize with random
