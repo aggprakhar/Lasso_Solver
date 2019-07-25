@@ -1,0 +1,40 @@
+fvalue_APG_const = []
+Gammak = 1/np.linalg.norm(A.T.dot(A))
+
+xk = np.zeros((p,1))      # Initialize with zero
+
+# For Accelerated Proximal Gradient Descent    
+xk_acc = xk.copy()
+yk_acc = xk_acc
+tk_acc = 1
+stopUpdate_acc = False
+Dobj_acc = 0
+
+for k in range(kMax):
+    # Accelerated Gradient Descent (GD) Step
+    x_kplus1_acc = yk_acc - Gammak*grf(A,yk_acc,y)        
+    # Proximal Operation (Shrinkage)
+    x_kplus1_acc = proxNorm1(x_kplus1_acc,Gammak*lamda)   
+    t_kplus1_acc = 0.5 + 0.5*np.sqrt(1+4*(tk_acc**2.))
+    y_kplus1_acc = x_kplus1_acc + ((tk_acc - 1)/(tk_acc + 1))*(x_kplus1_acc - xk_acc)
+
+    f_kplus1 =  obj(A,x_kplus1_acc,y,lamda)[0,0]
+    f_k =  obj(A,xk_acc,y,lamda)[0,0]
+
+    # Change in the value of objective funtion for this iteration
+    Dobj_acc = np.linalg.norm(f_kplus1 - f_k)
+
+    if k%20==0:
+        print('k:',k, ' obj = ', f_kplus1, 'Change = ',Dobj)
+    fvalue_APG_const.append(f_k)
+
+    # Update
+    xk_acc = x_kplus1_acc
+    tk_acc = t_kplus1_acc
+    yk_acc =  y_kplus1_acc
+
+    # ====================================================================        
+
+    # Terminating Condition        
+    if (Dobj < 1) and (Dobj_acc < 1):
+        break
