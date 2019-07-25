@@ -1,0 +1,8 @@
+# Graphical Display 
+plt.subplot(121)    
+plt.plot(xStar)
+plt.title('Original x')
+plt.subplot(122)
+plt.plot(xk)
+plt.title('Reconstructed x')
+plt.show()
