@@ -1,0 +1,31 @@
+import copy
+max_iter = 100
+xinit = np.zeros((p,1))      # Initialize with zero
+
+fvalue_CD = []
+
+xk = copy.deepcopy(xinit)
+k = 0
+d = np.size(A, 1)
+
+while k < max_iter:        
+    x_kplus1 = copy.deepcopy(xk)
+    r = (y - A.dot(x_kplus1))[:,0]
+    for j in range(d):
+        selector = [i for i in range(A.shape[1]) if i != j]
+        norm_A_j = np.linalg.norm(A[:, j])
+        res = proxNorm1( A[:, j].dot(r)/norm_A_j**2 + x_kplus1[j], lamda/(norm_A_j**2))
+        x_kplus1[j] = res
+        r = r - A[:, j]*(x_kplus1[j]-xk[j])
+    k += 1
+    f_kplus1 =  obj(A,x_kplus1,y,lamda)[0,0]
+    f_k =  obj(A,xk,y,lamda)[0,0]
+    fvalue_CD.append(f_k)
+    xk = x_kplus1
+    # Change in the value of objective funtion for this iteration
+    Dobj = np.linalg.norm(f_kplus1 - f_k)
+    if k%1==0:
+        print('k:',k, ' obj = ', f_kplus1, 'Change = ',Dobj)
+
+    if(Dobj<0.1):
+        break
