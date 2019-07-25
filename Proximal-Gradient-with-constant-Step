@@ -1,0 +1,18 @@
+Gammak = 1/np.linalg.norm(A.T.dot(A))
+xk = np.zeros((p,1))      # Initialize with zero
+
+fvalue_PG_const = []
+for k in range(kMax):
+    x_kplus1 = xk - Gammak*grf(A,xk,y)        # Gradient Descent (GD) Step
+    x_kplus1 = proxNorm1(x_kplus1,Gammak*lamda)   # Proximal Operation (Shrinkage)
+    f_kplus1 =  obj(A,x_kplus1,y,lamda)[0,0]
+    f_k = obj(A,xk,y,lamda)[0,0]
+    # Terminating Condition        
+    Dobj = np.linalg.norm(f_kplus1 - f_k)
+    if k%50==0:
+        print('k:',k, ' obj = ', f_kplus1, 'Change = ',Dobj)
+    fvalue_PG_const.append(f_k)
+    if(Dobj<0.1):
+        break
+    # Update xk
+    xk = x_kplus1 
