@@ -1,0 +1,26 @@
+import copy
+
+# Objective function: f(x) + lambda*norm1(x)
+def obj(A,x,y,lamda):
+    return f(A,x,y) + lamda*np.sum(np.abs(x))
+
+# f(x) = (1/2)||Ax-b||^2
+def f(A,x,y):
+    Ax_y = A.dot(x) - y
+    return 0.5*(Ax_y.T.dot(Ax_y))
+
+# gradient of f(x)= A'(Ax - b)   
+def grf(A,x,y):
+    return A.T.dot(A.dot(x) - y)
+    
+# Model function evaluated at x and touches f(x) in xk
+def m(x,xk,A,y,GammaK):
+    innerProd = grf(A,xk,y).T.dot(x - xk)
+    xDiff = x - xk
+    return f(A,xk,y) + innerProd + (1.0/(2.0*GammaK))*xDiff.T.dot(xDiff)
+
+# Shrinkage or Proximal operation
+def proxNorm1(y,lamda):
+    return np.sign(y)*np.maximum(np.zeros(np.shape(y)),np.abs(y)-lamda)
+   
+
