@@ -1,0 +1,24 @@
+Gammak = 1/np.linalg.norm(A.T.dot(A))
+xk = np.zeros((p,1))      # Initialize with zero
+
+fvalue_SubG_const = []
+for k in range(kMax):
+    s = copy.deepcopy(xk)
+    s[xk>0] = 1
+    s[xk<0] = -1
+    sx0 = s[xk==0]
+    s[xk==0] = -2*np.random.rand(*sx0.shape)+1
+    g = grf(A,xk,y) + lamda * s
+    
+    x_kplus1 = xk - Gammak*g        # SubGradient Descent (GD) Step
+    f_kplus1 =  obj(A,x_kplus1,y,lamda)[0,0]
+    f_k = obj(A,xk,y,lamda)[0,0]
+    # Terminating Condition        
+    Dobj = np.linalg.norm(f_kplus1 - f_k)
+    if k%50==0:
+        print('k:',k, ' obj = ', f_kplus1, 'Change = ',Dobj)
+    fvalue_SubG_const.append(f_k)
+    if(Dobj<0.1):
+        break
+    # Update xk
+    xk = x_kplus1 
